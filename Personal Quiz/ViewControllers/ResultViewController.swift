@@ -15,44 +15,44 @@ class ResultViewController: UIViewController {
     
     var answers: [Answer] = []
     
-    private var dogAnswer = 0
-    private var catAnswer = 0
-    private var rabbitAnswer = 0
-    private var turpleAnswer = 0
+    private var answersDictionary: [AnimalType: Int] = [:]
+    private var maxCountOfAnswers = 0
+    var result: String = ""
+    var resultDescription: String = ""
     
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.navigationItem.setHidesBackButton(true, animated: false)
-        
+        calculateResults()
+    }
+    
+    private func calculateResults() {
         for answer in answers {
-            switch answer.type {
-            case .dog:
-                dogAnswer += 1
-            case .cat:
-                catAnswer += 1
-            case .rabbit:
-                rabbitAnswer += 1
-            case .turtle:
-                turpleAnswer += 1
+            if answersDictionary[answer.type] == nil {
+                answersDictionary[answer.type] = 1
+            } else {
+                answersDictionary[answer.type] = answersDictionary[answer.type]! + 1
             }
         }
-        if dogAnswer > catAnswer && dogAnswer > rabbitAnswer && dogAnswer > turpleAnswer {
-            resultLabel.text = "Вы - \(AnimalType.dog.rawValue)"
-            resultDescriptionLabel.text = AnimalType.dog.definition
-        } else if catAnswer > dogAnswer && catAnswer > rabbitAnswer && catAnswer > turpleAnswer {
-            resultLabel.text = "Вы - \(AnimalType.cat.rawValue)"
-            resultDescriptionLabel.text = AnimalType.cat.definition
-        } else if rabbitAnswer > dogAnswer && rabbitAnswer > catAnswer && rabbitAnswer > turpleAnswer {
-            resultLabel.text = "Вы - \(AnimalType.rabbit.rawValue)"
-            resultDescriptionLabel.text = AnimalType.rabbit.definition
-        } else if turpleAnswer > dogAnswer && turpleAnswer > catAnswer && turpleAnswer > rabbitAnswer {
-            resultLabel.text = "Вы - \(AnimalType.turtle.rawValue)"
-            resultDescriptionLabel.text = AnimalType.turtle.definition
-        } else {
-            resultLabel.text = "Упс"
-            resultDescriptionLabel.text = "Мы не смогли определиться 😓"
+        
+        for (key, value) in answersDictionary {
+            if maxCountOfAnswers < value {
+                maxCountOfAnswers = value
+                result = "Вы - \(key.rawValue)"
+                resultDescription = key.definition
+            } else if maxCountOfAnswers == value {
+                result = "Упс"
+                resultDescription = "Мы не смогли определиться"
+            }
         }
+        
+        updateUI(result: result, description: resultDescription)
+    }
+    
+    private func updateUI(result: String, description: String) {
+        resultLabel.text = result
+        resultDescriptionLabel.text = description
     }
 }
