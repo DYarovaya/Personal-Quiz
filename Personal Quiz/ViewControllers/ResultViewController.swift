@@ -17,8 +17,8 @@ class ResultViewController: UIViewController {
     
     private var answersDictionary: [AnimalType: Int] = [:]
     private var maxCountOfAnswers = 0
-    var result: String = ""
-    var resultDescription: String = ""
+    private var result: String = ""
+    private var resultDescription: String = ""
     
     
     override func viewDidLoad() {
